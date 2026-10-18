@@ -58,6 +58,7 @@ python3 bench.py --method prognet --seed 0 --tasks 5 --epochs 300
 
 * `results/runs/T{tasks}_e{epochs}[_tag]/{method}_seed{n}.json`: one file per run, with the T x T matrices (row = after training stage i, column = test task j) for S11 R2, S11 MAE, S11 MAE on matched designs, gain R2 and MAE, resonance-frequency R2 and relative error, plus run time and parameter count.
 * `results/summary.json`: means, sample standard deviations, paired t-tests, the EWC sweep and the replicate limit.
+* `results/preds/`: seed-0 S11 predictions of XGBoost and Progressive Networks used for the scatter figure, written by `bench.py --dump` after checking that the rerun reproduces the stored metrics.
 * `figures/`: the paper figures.
 
 ## Licence

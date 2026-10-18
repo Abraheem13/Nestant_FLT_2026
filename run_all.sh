@@ -8,5 +8,8 @@ python3 test_gradients.py
 python3 make_jobs.py
 xargs -P "${JOBS:-8}" -L 1 python3 bench.py < ../results/jobs.txt > ../results/run_log.txt
 python3 aggregate.py
+# seed-0 predictions for the scatter figure; --dump checks them against the stored runs
+python3 bench.py --method xgb --seed 0 --tasks 5 --epochs 300 --dump
+python3 bench.py --method prognet --seed 0 --tasks 5 --epochs 300 --dump
 python3 make_figures.py
 python3 gen_tex.py

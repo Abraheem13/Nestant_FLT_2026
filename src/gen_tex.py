@@ -177,3 +177,43 @@ for k, lab in [("finetune", "MLP, fine-tuned"), ("ewc_best", "EWC, best $\\lambd
 t += [r"\bottomrule", r"\end{tabular}"]
 (OUT / "tab_budget.tex").write_text("\n".join(t) + "\n")
 print("wrote", sorted(p.name for p in OUT.iterdir()))
+
+# ------------------------------------------------------------------ per-task final error, T=5
+cfg = "T5_e300"; labs = S[cfg]["xgb"]["labels"]
+TL = {"1.5S": "1.5$_S$", "1.5L": "1.5$_L$", "2.4": "2.4", "5.8S": "5.8$_S$", "5.8L": "5.8$_L$"}
+t = [r"\begin{tabular}{@{}l" + "c" * (len(labs) + 1) + "@{}}", r"\toprule",
+     "Method & " + " & ".join(TL[l] for l in labs) + r" & Mean \\", r"\midrule"]
+for k, lab in ROWS + [(None, None)] + list(POOLED):
+    if k is None:
+        t.append(r"\midrule"); continue
+    v = S[cfg][k].get("pertask_final_s11_mae") or S[cfg][k]["pertask_s11_mae"]   # pooled: one stage
+    t.append(lab + " & " + " & ".join(f"${x:.2f}$" for x in v) + f" & ${np.mean(v):.2f}$ \\\\")
+c = S["data"]["ceiling"]["T5"]
+t.append(r"\midrule")
+t.append(r"Replicate limit$^\dagger$ & " + " & ".join(f"${x:.2f}$" for x in c["mae_per_task"])
+         + f" & ${c['mae_mean']:.2f}$ \\\\")
+t += [r"\bottomrule", r"\end{tabular}"]
+(OUT / "tab_pertask.tex").write_text("\n".join(t) + "\n")
+
+# numbers shown in the scatter figure, read from the stored seed-0 runs
+for m in ("xgb", "prognet"):
+    A = json.loads((ROOT / "results" / "runs" / cfg / f"{m}_seed0.json").read_text())["matrices"]["s11_mae"]
+    put_after = lambda key, val: open(OUT / "numbers.tex", "a").write(rf"\makeatletter\@namedef{{x@{key}}}{{{val}}}\makeatother" + "\n")
+    put_after(f"sc@{m}@diag", f"{A[3][3]:.2f}"); put_after(f"sc@{m}@final", f"{A[4][3]:.2f}")
+print("wrote tab_pertask.tex and scatter macros")
+
+# per-task macros used in the text: \X{pt@<method>@<task>} and the replicate limit
+with open(OUT / "numbers.tex", "a") as fh:
+    fh.write("\\makeatletter\n")
+    for k, _ in ROWS + list(POOLED):
+        v = S[cfg][k].get("pertask_final_s11_mae") or S[cfg][k]["pertask_s11_mae"]
+        for lab, x in zip(labs, v):
+            fh.write(rf"\@namedef{{x@pt@{k}@{lab}}}{{{x:.2f}}}" + "\n")
+    for lab, x in zip(labs, c["mae_per_task"]):
+        fh.write(rf"\@namedef{{x@pt@limit@{lab}}}{{{x:.2f}}}" + "\n")
+    gap = max(a - b for a, b in zip(S[cfg]["joint_xgb"]["pertask_s11_mae"], c["mae_per_task"]))
+    fh.write(rf"\@namedef{{x@pt@pooledgap}}{{{gap:.2f}}}" + "\n")
+    pi = [a - b for a, b in zip(S[cfg]["indep"]["pertask_final_s11_mae"], S[cfg]["prognet"]["pertask_final_s11_mae"])]
+    fh.write(rf"\@namedef{{x@pt@lastshare}}{{{100 * pi[-1] / sum(pi):.0f}}}" + "\n")
+    fh.write("\\makeatother\n")
+

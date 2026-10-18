@@ -89,3 +89,85 @@ fig.tight_layout(w_pad=0.6)
 fig.savefig(FIGS / "fig_scaling.pdf")
 plt.close(fig)
 print("wrote", [p.name for p in FIGS.glob("fig_*.pdf")])
+
+# ------------------------------------------------------------------ EWC and replay sweeps
+C = S["T5_e300"]
+fig, (a, b) = plt.subplots(1, 2, figsize=(3.45, 1.55))
+lams = [1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000]
+key = {lam: f"ewc_lam{lam:g}" for lam in lams}
+for metric, lab, c, mk in (("diag_s11_mae", "on task just learned", "#888888", "s"),
+                           ("final_s11_mae", "final, all tasks", "#a50026", "o")):
+    m = [C[key[l]][metric]["mean"] for l in lams]
+    sd = [C[key[l]][metric]["std"] for l in lams]
+    a.errorbar(lams, m, yerr=sd, marker=mk, ms=2.5, lw=0.9, color=c, label=lab, capsize=1.2)
+a.axhline(C["indep"]["final_s11_mae"]["mean"], color="#332288", lw=0.7, ls="--")
+a.text(1.3, C["indep"]["final_s11_mae"]["mean"] / 1.5, "independent MLPs", fontsize=5.5, color="#332288")
+a.set_ylim(0.25, 120)
+a.set_xscale("log"); a.set_yscale("log")
+a.set_xticks([1, 1e2, 1e4, 1e6, 1e8])
+a.set_xlabel(r"EWC penalty $\lambda$"); a.set_ylabel(r"$S_{11}$ MAE (dB)")
+a.set_title(r"(a) EWC, $T{=}5$")
+a.legend(frameon=False, loc="upper left", fontsize=5.5, handlelength=1.4)
+
+rhos = [0.0, 0.05, 0.1, 0.2, 0.4]
+rk = {0.0: "finetune", 0.05: "replay_buf0.05", 0.1: "replay_buf0.1", 0.2: "replay_buf0.2", 0.4: "replay_buf0.4"}
+for metric, lab, c, mk in (("final_s11_mae", "final, all tasks", "#a50026", "o"),
+                           ("bwt_s11_mae", r"$\Delta$ (forgetting)", "#f46d43", "^"),
+                           ("diag_s11_mae", "on task just learned", "#888888", "s")):
+    m = [C[rk[r]][metric]["mean"] for r in rhos]
+    sd = [C[rk[r]][metric]["std"] for r in rhos]
+    b.errorbar([100 * r for r in rhos], m, yerr=sd, marker=mk, ms=2.5, lw=0.9, color=c, label=lab, capsize=1.2)
+b.axhline(C["indep"]["final_s11_mae"]["mean"], color="#332288", lw=0.7, ls="--")
+b.set_xlabel(r"replay buffer $\rho$ (%)"); b.set_ylabel(r"$S_{11}$ MAE (dB)")
+b.set_title(r"(b) replay, $T{=}5$ ($\rho{=}0$: fine-tuning)")
+b.set_xticks([0, 5, 10, 20, 40])
+b.legend(frameon=False, loc="upper right", fontsize=5.5, handlelength=1.4)
+fig.tight_layout(w_pad=0.5)
+fig.savefig(FIGS / "fig_sweeps.pdf")
+plt.close(fig)
+
+# ------------------------------------------------------------------ prediction scatter
+PRED = ROOT / "results" / "preds" / "T5_e300"
+X = np.load(PRED / "xgb_seed0.npz"); P = np.load(PRED / "prognet_seed0.npz")
+task = 3                                            # 5.8 GHz small patches
+sel = X["task"] == task
+y = X["true_s11"][sel]
+panels = [(X["pred_s11"][3, sel], "XGBoost, after 5.8$_S$"),
+          (X["pred_s11"][4, sel], "XGBoost, after 5.8$_L$"),
+          (P["pred_s11"][4, sel], "Progressive, after 5.8$_L$")]
+lo = min(y.min(), min(p.min() for p, _ in panels)) - 0.5
+fig, axes = plt.subplots(1, 3, figsize=(3.45, 1.32), sharey=True)
+for ax, (p, title) in zip(axes, panels):
+    ax.plot([lo, 0.5], [lo, 0.5], color="#999999", lw=0.6)
+    ax.scatter(y, p, s=1.2, alpha=0.35, color="#332288", linewidths=0)
+    ax.set_xlim(lo, 0.5); ax.set_ylim(lo, 0.5); ax.set_aspect("equal")
+    ax.set_title(title, fontsize=6.3)
+    ax.text(0.04, 0.96, f"MAE {np.abs(p - y).mean():.2f} dB", transform=ax.transAxes,
+            fontsize=5.8, va="top")
+    ax.set_xlabel("simulated (dB)", fontsize=6)
+axes[0].set_ylabel("predicted (dB)", fontsize=6)
+fig.tight_layout(w_pad=0.3)
+fig.savefig(FIGS / "fig_scatter.pdf")
+plt.close(fig)
+print("wrote fig_sweeps.pdf, fig_scatter.pdf")
+
+# ------------------------------------------------------------------ task order (NestAnt-CMS)
+keys = ["T5_e300", "T5_e300_first1", "T5_e300_first2", "T5_e300_first3", "T5_e300_first4"]
+m = [S[k]["cms"]["final_s11_mae"]["mean"] for k in keys]
+sd = [S[k]["cms"]["final_s11_mae"]["std"] for k in keys]
+fig, ax = plt.subplots(figsize=(3.45, 1.25))
+ax.bar(range(5), m, yerr=sd, color="#332288", alpha=0.85, width=0.6, capsize=2,
+       error_kw=dict(lw=0.7))
+for ref, lab, c, ls in (("indep", "independent MLPs", "#888888", "--"),
+                        ("prognet", "Progressive Nets", "#117733", ":")):
+    v = S["T5_e300"][ref]["final_s11_mae"]["mean"]
+    ax.axhline(v, color=c, lw=0.9, ls=ls, label=lab)
+ax.set_xticks(range(5)); ax.set_xticklabels(LAB)
+ax.set_xlabel("first task (encoder trained on it)"); ax.set_ylabel(r"final $S_{11}$ MAE (dB)")
+ax.set_ylim(0, 0.9)
+ax.legend(frameon=False, fontsize=5.5, loc="upper left", ncol=2, handlelength=1.6)
+fig.tight_layout()
+fig.savefig(FIGS / "fig_order.pdf")
+plt.close(fig)
+print("wrote fig_order.pdf")
+

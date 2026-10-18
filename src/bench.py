@@ -58,6 +58,7 @@ class Recorder:
         self.pooled_matched = [float("nan")] * T     # row-weighted, all trained tasks
         s11 = split.y_phys(split.y_test)[:, 0]
         self.n_matched = [int((s11[split.t_test == j] < -10.0).sum()) for j in range(T)]
+        self.pred = np.full((T, len(s11)), np.nan)    # S11 [dB] predictions per stage
 
     def record(self, stage, predict):
         """predict(X, task) -> standardised predictions, or None if no model."""
@@ -70,6 +71,7 @@ class Recorder:
             for k, v in metrics(self.s, yhat, m).items():
                 self.A[k][stage, j] = v
             yt = self.s.y_phys(self.s.y_test[m])[:, 0]; yp = self.s.y_phys(yhat)[:, 0]
+            self.pred[stage, m] = yp
             errs.append(np.abs(yt - yp)[yt < -10.0])
         e = np.concatenate(errs) if errs else np.zeros(0)
         if len(e):
@@ -244,6 +246,9 @@ def main():
     ap.add_argument("--replay_frac", type=float, default=0.10)
     ap.add_argument("--order", type=str, default="", help="comma-separated task order")
     ap.add_argument("--tag", type=str, default="")
+    ap.add_argument("--dump", action="store_true",
+                    help="save S11 test predictions of every stage to results/preds and "
+                         "check the metrics against the stored run instead of overwriting it")
     a = ap.parse_args()
 
     split = make_split(load(), a.tasks, a.seed)
@@ -273,6 +278,15 @@ def main():
                seconds=secs, threads=os.environ.get("OMP_NUM_THREADS"), **extra,
                pooled_matched_mae=rec.pooled_matched, n_matched_test=rec.n_matched,
                matrices={k: v.tolist() for k, v in rec.A.items()})
+    if a.dump:
+        stored = json.loads((out / f"{name}_seed{a.seed}.json").read_text())["matrices"]
+        for k, v in rec.A.items():
+            assert np.allclose(np.array(stored[k], float), v, equal_nan=True, rtol=0, atol=1e-12), k
+        pdir = RUNS.parent / "preds" / sub; pdir.mkdir(parents=True, exist_ok=True)
+        np.savez_compressed(pdir / f"{name}_seed{a.seed}.npz", pred_s11=rec.pred,
+                            true_s11=split.y_phys(split.y_test)[:, 0], task=split.t_test)
+        print(f"dumped predictions; metrics identical to stored {sub}/{name}_seed{a.seed}.json")
+        return
     (out / f"{name}_seed{a.seed}.json").write_text(json.dumps(res))
     A = rec.A["s11_r2"]
     if a.method.startswith("joint"):
