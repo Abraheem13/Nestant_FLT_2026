@@ -20,6 +20,7 @@ Things to know before using it:
 |----|---------------------------|
 | 5  | 1.5 GHz with L < 47 mm, 1.5 GHz with L >= 47 mm, 2.4 GHz, 5.8 GHz with L < 11 mm, 5.8 GHz with L >= 11 mm |
 | 10 | 1.5 GHz in four length bins (37-41, 42-46, 47-51, 52-57 mm), 2.4 GHz in two (25-29, 30-35 mm), 5.8 GHz in four (7-8.5, 9-10.5, 11-13, 13.5-15.5 mm) |
+| 20 | every T=10 bin split in two (two or three patch lengths per task, 770 to 1,439 training rows) |
 
 For each seed, 20 % of the geometries of every task (with all their replicates) are held out for testing. The seed also sets the initialisation and the minibatch order.
 
@@ -46,7 +47,7 @@ Python 3.10+ with `numpy pandas scipy scikit-learn matplotlib xgboost`.
 JOBS=8 ./run_all.sh
 ```
 
-This runs the gradient checks, all 355 training runs (`results/jobs.txt`), the aggregation, the figures and the generated LaTeX numbers and tables (`results/tex/`). A single run is
+This runs the gradient checks, all 445 training runs (`results/jobs.txt`), the aggregation, the figures and the generated LaTeX numbers and tables (`results/tex/`). A single run is
 
 ```bash
 cd src

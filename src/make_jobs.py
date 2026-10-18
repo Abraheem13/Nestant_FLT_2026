@@ -4,7 +4,7 @@ from pathlib import Path
 LAMBDAS = ["1", "10", "100", "1000", "10000", "100000", "1000000", "10000000", "100000000"]
 jobs = []
 for s in range(5):
-    for T in (5, 10):
+    for T in (5, 10, 20):
         for m in ["finetune", "indep", "prognet", "cms", "rf", "xgb", "joint_mlp", "joint_xgb"]:
             jobs.append(f"--method {m} --seed {s} --tasks {T} --epochs 300")
         jobs.append(f"--method replay --replay_frac 0.1 --seed {s} --tasks {T} --epochs 300")

@@ -96,7 +96,7 @@ def main():
 
     # paired tests on final S11 R^2
     tests = {}
-    for cfg in ("T5_e300", "T10_e300"):
+    for cfg in ("T5_e300", "T10_e300", "T20_e300"):
         S = summary.get(cfg, {})
         for a, b in [("cms", "indep"), ("prognet", "cms"), ("prognet", "indep"), ("prognet", "xgb"),
                      ("joint_xgb", "prognet"), ("joint_mlp", "prognet")]:
@@ -116,7 +116,7 @@ def main():
     # test rows with the same geometry (an upper bound for any function of
     # the recorded inputs), and the replicate spread in dB
     df = load(); ceil = {}
-    for T in (5, 10):
+    for T in (5, 10, 20):
         vals, maes, sds = [], [], []
         for seed in range(5):
             s = make_split(df, T, seed)
@@ -142,7 +142,7 @@ def main():
                            ceiling=ceil)
     summary["data"]["reps"] = {str(k): int(v) for k, v in summary["data"]["reps"].items()}
     rows = {}
-    for T in (5, 10):
+    for T in (5, 10, 20):
         counts = [[int((make_split(df, T, sd).t_train == t).sum()) for t in range(T)] for sd in range(5)]
         rows[f"T{T}"] = dict(min=int(np.min(counts)), max=int(np.max(counts)))
     summary["data"]["train_rows"] = rows

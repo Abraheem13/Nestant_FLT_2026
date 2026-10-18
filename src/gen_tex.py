@@ -4,9 +4,9 @@ gen_tex.py -- write every number used in the paper from results/summary.json.
 Outputs (in results/tex/ unless a directory is given):
     numbers.tex  macros  \\V{cfg}{method}{metric}  mean
                          \\D{cfg}{method}{metric}  sample std
-                         \\P{cfg}{method}{metric}  "mean \\pm std"
+                         \\PM{cfg}{method}{metric} "mean \\pm std"
                          plus a few scalar macros (tests, data facts)
-    tab_t5.tex, tab_t10.tex, tab_budget.tex
+    tab_t5.tex, tab_long.tex (T=10 and T=20), tab_budget.tex
 """
 import json
 import sys
@@ -85,7 +85,7 @@ put("x", "repsdmed", f"{D['s11_rep_sd_median']:.2f}")
 put("x", "repsdmean", f"{D['s11_rep_sd_mean']:.2f}")
 put("x", "matched", f"{100 * D['matched_frac']:.1f}")
 put("x", "posrows", str(D["s11_positive_rows"]))
-for T in (5, 10):
+for T in (5, 10, 20):
     c = D["ceiling"][f"T{T}"]
     put("x", f"ceilT{T}", f"{c['mean']:.3f}")
     put("x", f"ceilT{T}min", f"{min(c['per_task']):.3f}")
@@ -97,12 +97,12 @@ for cfg in S:
         lam = float(S[cfg]["ewc_best"]["selected"].replace("ewc_lam", ""))
         e = int(round(__import__("math").log10(lam)))
         put("x", f"lam@{cfg}", f"10^{{{e}}}" if lam != 1 else "1")
-for T in (5, 10):
+for T in (5, 10, 20):
     r = D["train_rows"][f"T{T}"]
     put("x", f"trainminT{T}", f"{r['min']:,}".replace(",", "{,}"))
     put("x", f"trainmaxT{T}", f"{r['max']:,}".replace(",", "{,}"))
 put("x", "nruns", str(S["compute"]["n_runs"]))
-for T in (5, 10):
+for T in (5, 10, 20):
     put("x", f"ratioT{T}", f"{S[f'T{T}_e300']['prognet']['params'] / S[f'T{T}_e300']['cms']['params']:.1f}")
 put("x", "cpuh", f"{S['compute']['cpu_hours']:.1f}")
 g = S["gradient_check"]; e = int(np.floor(np.log10(g))); mant = g / 10 ** e
@@ -153,19 +153,20 @@ t.append(f"Replicate limit$^\\dagger$ & -- & ${c['mae_mean']:.2f}$ & -- & -- & $
 t += [r"\bottomrule", r"\end{tabular}"]
 (OUT / "tab_t5.tex").write_text("\n".join(t) + "\n")
 
-cfg = "T10_e300"
-t = [r"\begin{tabular}{@{}lccr@{}}", r"\toprule",
-     r" & \multicolumn{2}{c}{$S_{11}$ MAE (dB)} & \\", r"\cmidrule(lr){2-3}",
-     r"Method & Final\,$\downarrow$ & $\Delta$\,$\downarrow$ & Params \\", r"\midrule"]
+t = [r"\begin{tabular}{@{}lcccc@{}}", r"\toprule",
+     r" & \multicolumn{2}{c}{$T=10$} & \multicolumn{2}{c}{$T=20$} \\",
+     r"\cmidrule(lr){2-3}\cmidrule(lr){4-5}",
+     r"Method & Final\,$\downarrow$ & $\Delta$\,$\downarrow$ & Final\,$\downarrow$ & $\Delta$\,$\downarrow$ \\", r"\midrule"]
 for k, lab in ROWS:
-    t.append(f"{lab} & {pm(cfg, k, 'final_s11_mae')} & {mn(cfg, k, 'bwt_s11_mae')} & {params(cfg, k)} \\\\")
+    t.append(f"{lab} & {pm('T10_e300', k, 'final_s11_mae')} & {mn('T10_e300', k, 'bwt_s11_mae')} & "
+             f"{pm('T20_e300', k, 'final_s11_mae')} & {mn('T20_e300', k, 'bwt_s11_mae')} \\\\")
 t.append(r"\midrule")
 for k, lab in POOLED:
-    t.append(f"{lab} & {pm(cfg, k, 'final_s11_mae')} & -- & {params(cfg, k)} \\\\")
-c = S["data"]["ceiling"]["T10"]
-t.append(f"Replicate limit$^\\dagger$ & ${c['mae_mean']:.2f}$ & -- & -- \\\\")
+    t.append(f"{lab} & {pm('T10_e300', k, 'final_s11_mae')} & -- & {pm('T20_e300', k, 'final_s11_mae')} & -- \\\\")
+c10, c20 = S["data"]["ceiling"]["T10"], S["data"]["ceiling"]["T20"]
+t.append(f"Replicate limit$^\\dagger$ & ${c10['mae_mean']:.2f}$ & -- & ${c20['mae_mean']:.2f}$ & -- \\\\")
 t += [r"\bottomrule", r"\end{tabular}"]
-(OUT / "tab_t10.tex").write_text("\n".join(t) + "\n")
+(OUT / "tab_long.tex").write_text("\n".join(t) + "\n")
 
 t = [r"\begin{tabular}{@{}lccc@{}}", r"\toprule",
      r"Method & 30 epochs & 100 epochs & 300 epochs \\", r"\midrule"]

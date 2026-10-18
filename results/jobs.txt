@@ -32,6 +32,23 @@
 --method ewc --lam 1000000 --seed 0 --tasks 10 --epochs 300
 --method ewc --lam 10000000 --seed 0 --tasks 10 --epochs 300
 --method ewc --lam 100000000 --seed 0 --tasks 10 --epochs 300
+--method finetune --seed 0 --tasks 20 --epochs 300
+--method indep --seed 0 --tasks 20 --epochs 300
+--method prognet --seed 0 --tasks 20 --epochs 300
+--method cms --seed 0 --tasks 20 --epochs 300
+--method xgb --seed 0 --tasks 20 --epochs 300
+--method joint_mlp --seed 0 --tasks 20 --epochs 300
+--method joint_xgb --seed 0 --tasks 20 --epochs 300
+--method replay --replay_frac 0.1 --seed 0 --tasks 20 --epochs 300
+--method ewc --lam 1 --seed 0 --tasks 20 --epochs 300
+--method ewc --lam 10 --seed 0 --tasks 20 --epochs 300
+--method ewc --lam 100 --seed 0 --tasks 20 --epochs 300
+--method ewc --lam 1000 --seed 0 --tasks 20 --epochs 300
+--method ewc --lam 10000 --seed 0 --tasks 20 --epochs 300
+--method ewc --lam 100000 --seed 0 --tasks 20 --epochs 300
+--method ewc --lam 1000000 --seed 0 --tasks 20 --epochs 300
+--method ewc --lam 10000000 --seed 0 --tasks 20 --epochs 300
+--method ewc --lam 100000000 --seed 0 --tasks 20 --epochs 300
 --method replay --replay_frac 0.05 --seed 0 --tasks 5 --epochs 300
 --method replay --replay_frac 0.2 --seed 0 --tasks 5 --epochs 300
 --method replay --replay_frac 0.4 --seed 0 --tasks 5 --epochs 300
@@ -73,6 +90,23 @@
 --method ewc --lam 1000000 --seed 1 --tasks 10 --epochs 300
 --method ewc --lam 10000000 --seed 1 --tasks 10 --epochs 300
 --method ewc --lam 100000000 --seed 1 --tasks 10 --epochs 300
+--method finetune --seed 1 --tasks 20 --epochs 300
+--method indep --seed 1 --tasks 20 --epochs 300
+--method prognet --seed 1 --tasks 20 --epochs 300
+--method cms --seed 1 --tasks 20 --epochs 300
+--method xgb --seed 1 --tasks 20 --epochs 300
+--method joint_mlp --seed 1 --tasks 20 --epochs 300
+--method joint_xgb --seed 1 --tasks 20 --epochs 300
+--method replay --replay_frac 0.1 --seed 1 --tasks 20 --epochs 300
+--method ewc --lam 1 --seed 1 --tasks 20 --epochs 300
+--method ewc --lam 10 --seed 1 --tasks 20 --epochs 300
+--method ewc --lam 100 --seed 1 --tasks 20 --epochs 300
+--method ewc --lam 1000 --seed 1 --tasks 20 --epochs 300
+--method ewc --lam 10000 --seed 1 --tasks 20 --epochs 300
+--method ewc --lam 100000 --seed 1 --tasks 20 --epochs 300
+--method ewc --lam 1000000 --seed 1 --tasks 20 --epochs 300
+--method ewc --lam 10000000 --seed 1 --tasks 20 --epochs 300
+--method ewc --lam 100000000 --seed 1 --tasks 20 --epochs 300
 --method replay --replay_frac 0.05 --seed 1 --tasks 5 --epochs 300
 --method replay --replay_frac 0.2 --seed 1 --tasks 5 --epochs 300
 --method replay --replay_frac 0.4 --seed 1 --tasks 5 --epochs 300
@@ -114,6 +148,23 @@
 --method ewc --lam 1000000 --seed 2 --tasks 10 --epochs 300
 --method ewc --lam 10000000 --seed 2 --tasks 10 --epochs 300
 --method ewc --lam 100000000 --seed 2 --tasks 10 --epochs 300
+--method finetune --seed 2 --tasks 20 --epochs 300
+--method indep --seed 2 --tasks 20 --epochs 300
+--method prognet --seed 2 --tasks 20 --epochs 300
+--method cms --seed 2 --tasks 20 --epochs 300
+--method xgb --seed 2 --tasks 20 --epochs 300
+--method joint_mlp --seed 2 --tasks 20 --epochs 300
+--method joint_xgb --seed 2 --tasks 20 --epochs 300
+--method replay --replay_frac 0.1 --seed 2 --tasks 20 --epochs 300
+--method ewc --lam 1 --seed 2 --tasks 20 --epochs 300
+--method ewc --lam 10 --seed 2 --tasks 20 --epochs 300
+--method ewc --lam 100 --seed 2 --tasks 20 --epochs 300
+--method ewc --lam 1000 --seed 2 --tasks 20 --epochs 300
+--method ewc --lam 10000 --seed 2 --tasks 20 --epochs 300
+--method ewc --lam 100000 --seed 2 --tasks 20 --epochs 300
+--method ewc --lam 1000000 --seed 2 --tasks 20 --epochs 300
+--method ewc --lam 10000000 --seed 2 --tasks 20 --epochs 300
+--method ewc --lam 100000000 --seed 2 --tasks 20 --epochs 300
 --method replay --replay_frac 0.05 --seed 2 --tasks 5 --epochs 300
 --method replay --replay_frac 0.2 --seed 2 --tasks 5 --epochs 300
 --method replay --replay_frac 0.4 --seed 2 --tasks 5 --epochs 300
@@ -155,6 +206,23 @@
 --method ewc --lam 1000000 --seed 3 --tasks 10 --epochs 300
 --method ewc --lam 10000000 --seed 3 --tasks 10 --epochs 300
 --method ewc --lam 100000000 --seed 3 --tasks 10 --epochs 300
+--method finetune --seed 3 --tasks 20 --epochs 300
+--method indep --seed 3 --tasks 20 --epochs 300
+--method prognet --seed 3 --tasks 20 --epochs 300
+--method cms --seed 3 --tasks 20 --epochs 300
+--method xgb --seed 3 --tasks 20 --epochs 300
+--method joint_mlp --seed 3 --tasks 20 --epochs 300
+--method joint_xgb --seed 3 --tasks 20 --epochs 300
+--method replay --replay_frac 0.1 --seed 3 --tasks 20 --epochs 300
+--method ewc --lam 1 --seed 3 --tasks 20 --epochs 300
+--method ewc --lam 10 --seed 3 --tasks 20 --epochs 300
+--method ewc --lam 100 --seed 3 --tasks 20 --epochs 300
+--method ewc --lam 1000 --seed 3 --tasks 20 --epochs 300
+--method ewc --lam 10000 --seed 3 --tasks 20 --epochs 300
+--method ewc --lam 100000 --seed 3 --tasks 20 --epochs 300
+--method ewc --lam 1000000 --seed 3 --tasks 20 --epochs 300
+--method ewc --lam 10000000 --seed 3 --tasks 20 --epochs 300
+--method ewc --lam 100000000 --seed 3 --tasks 20 --epochs 300
 --method replay --replay_frac 0.05 --seed 3 --tasks 5 --epochs 300
 --method replay --replay_frac 0.2 --seed 3 --tasks 5 --epochs 300
 --method replay --replay_frac 0.4 --seed 3 --tasks 5 --epochs 300
@@ -196,6 +264,23 @@
 --method ewc --lam 1000000 --seed 4 --tasks 10 --epochs 300
 --method ewc --lam 10000000 --seed 4 --tasks 10 --epochs 300
 --method ewc --lam 100000000 --seed 4 --tasks 10 --epochs 300
+--method finetune --seed 4 --tasks 20 --epochs 300
+--method indep --seed 4 --tasks 20 --epochs 300
+--method prognet --seed 4 --tasks 20 --epochs 300
+--method cms --seed 4 --tasks 20 --epochs 300
+--method xgb --seed 4 --tasks 20 --epochs 300
+--method joint_mlp --seed 4 --tasks 20 --epochs 300
+--method joint_xgb --seed 4 --tasks 20 --epochs 300
+--method replay --replay_frac 0.1 --seed 4 --tasks 20 --epochs 300
+--method ewc --lam 1 --seed 4 --tasks 20 --epochs 300
+--method ewc --lam 10 --seed 4 --tasks 20 --epochs 300
+--method ewc --lam 100 --seed 4 --tasks 20 --epochs 300
+--method ewc --lam 1000 --seed 4 --tasks 20 --epochs 300
+--method ewc --lam 10000 --seed 4 --tasks 20 --epochs 300
+--method ewc --lam 100000 --seed 4 --tasks 20 --epochs 300
+--method ewc --lam 1000000 --seed 4 --tasks 20 --epochs 300
+--method ewc --lam 10000000 --seed 4 --tasks 20 --epochs 300
+--method ewc --lam 100000000 --seed 4 --tasks 20 --epochs 300
 --method replay --replay_frac 0.05 --seed 4 --tasks 5 --epochs 300
 --method replay --replay_frac 0.2 --seed 4 --tasks 5 --epochs 300
 --method replay --replay_frac 0.4 --seed 4 --tasks 5 --epochs 300
@@ -205,14 +290,19 @@
 --method cms --seed 4 --tasks 5 --epochs 300 --order 4,0,1,2,3 --tag first4
 --method rf --seed 0 --tasks 5 --epochs 300
 --method rf --seed 0 --tasks 10 --epochs 300
+--method rf --seed 0 --tasks 20 --epochs 300
 --method rf --seed 1 --tasks 5 --epochs 300
 --method rf --seed 1 --tasks 10 --epochs 300
+--method rf --seed 1 --tasks 20 --epochs 300
 --method rf --seed 2 --tasks 5 --epochs 300
 --method rf --seed 2 --tasks 10 --epochs 300
+--method rf --seed 2 --tasks 20 --epochs 300
 --method rf --seed 3 --tasks 5 --epochs 300
 --method rf --seed 3 --tasks 10 --epochs 300
+--method rf --seed 3 --tasks 20 --epochs 300
 --method rf --seed 4 --tasks 5 --epochs 300
 --method rf --seed 4 --tasks 10 --epochs 300
+--method rf --seed 4 --tasks 20 --epochs 300
 --method finetune --seed 0 --tasks 5 --epochs 30
 --method indep --seed 0 --tasks 5 --epochs 30
 --method prognet --seed 0 --tasks 5 --epochs 30

@@ -16,8 +16,8 @@ geometries in the training set. All splits below are grouped by geometry:
 every replicate of a geometry falls on the same side of the split.
 
 Tasks. T=5 splits the 1.5 and 5.8 GHz bands at the patch-length median;
-T=10 refines each T=5 task further by patch length (every T=5 boundary is
-kept). Task order is ascending frequency, then ascending length.
+T=10 refines each T=5 task further by patch length, and T=20 splits every
+T=10 task in two (all coarser boundaries are kept). Task order is ascending frequency, then ascending length.
 """
 from __future__ import annotations
 
@@ -44,6 +44,17 @@ TASKS = {
          (2.4e9, 0.0, 30.0, "2.4a"), (2.4e9, 30.0, 99.0, "2.4b"),
          (5.8e9, 7.0, 9.0, "5.8a"), (5.8e9, 9.0, 11.0, "5.8b"),
          (5.8e9, 11.0, 13.5, "5.8c"), (5.8e9, 13.5, 99.0, "5.8d")],
+    # every T=10 task split in two by patch length
+    20: [(1.5e9, 37.0, 39.0, "1.5-1"), (1.5e9, 39.0, 42.0, "1.5-2"),
+         (1.5e9, 42.0, 44.0, "1.5-3"), (1.5e9, 44.0, 47.0, "1.5-4"),
+         (1.5e9, 47.0, 49.0, "1.5-5"), (1.5e9, 49.0, 52.0, "1.5-6"),
+         (1.5e9, 52.0, 55.0, "1.5-7"), (1.5e9, 55.0, 99.0, "1.5-8"),
+         (2.4e9, 0.0, 27.0, "2.4-1"), (2.4e9, 27.0, 30.0, "2.4-2"),
+         (2.4e9, 30.0, 33.0, "2.4-3"), (2.4e9, 33.0, 99.0, "2.4-4"),
+         (5.8e9, 7.0, 8.0, "5.8-1"), (5.8e9, 8.0, 9.0, "5.8-2"),
+         (5.8e9, 9.0, 10.0, "5.8-3"), (5.8e9, 10.0, 11.0, "5.8-4"),
+         (5.8e9, 11.0, 12.0, "5.8-5"), (5.8e9, 12.0, 13.5, "5.8-6"),
+         (5.8e9, 13.5, 14.5, "5.8-7"), (5.8e9, 14.5, 99.0, "5.8-8")],
 }
 
 
@@ -122,7 +133,7 @@ if __name__ == "__main__":
     gid = df.groupby(GEOM_KEY).ngroup()
     print(f"rows {len(df)}, distinct geometries {gid.nunique()}")
     print("replicates per geometry:", gid.value_counts().value_counts().sort_index().to_dict())
-    for T in (5, 10):
+    for T in (5, 10, 20):
         s = make_split(df, T, seed=0)
         print(f"T={T}")
         for t, lab in enumerate(labels(T)):

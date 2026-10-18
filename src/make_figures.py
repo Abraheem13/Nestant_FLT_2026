@@ -79,7 +79,7 @@ cms = (5 * 128 + 128 + 128 * 64 + 64) + T * (16 + 80 * 80 + 80 + 80 * 3 + 3)
 b.plot(T, prog / 1e3, color="#117733", lw=1, label="Progressive")
 b.plot(T, cms / 1e3, color="#332288", lw=1, ls="--", label="NestAnt-CMS")
 b.plot(T, T * col / 1e3, color="#888888", lw=1, ls=":", label="Independent")
-for t in (5, 10):
+for t in (5, 10, 20):
     for k, c in (("prognet", "#117733"), ("cms", "#332288"), ("indep", "#888888")):
         b.plot(t, S[f"T{t}_e300"][k]["params"] / 1e3, "o", ms=2.5, color=c)
 b.set_yscale("log"); b.set_xlabel("number of tasks $T$"); b.set_ylabel("parameters (thousands)")

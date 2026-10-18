@@ -238,7 +238,7 @@ def main():
                     choices=["finetune", "ewc", "replay", "indep", "prognet", "cms",
                              "rf", "xgb", "joint_mlp", "joint_xgb"])
     ap.add_argument("--seed", type=int, required=True)
-    ap.add_argument("--tasks", type=int, default=5, choices=[5, 10])
+    ap.add_argument("--tasks", type=int, default=5, choices=[5, 10, 20])
     ap.add_argument("--epochs", type=int, default=300)
     ap.add_argument("--lam", type=float, default=0.0)
     ap.add_argument("--replay_frac", type=float, default=0.10)

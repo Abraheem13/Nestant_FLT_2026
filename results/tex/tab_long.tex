@@ -1,0 +1,20 @@
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+ & \multicolumn{2}{c}{$T=10$} & \multicolumn{2}{c}{$T=20$} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Method & Final\,$\downarrow$ & $\Delta$\,$\downarrow$ & Final\,$\downarrow$ & $\Delta$\,$\downarrow$ \\
+\midrule
+XGBoost, refit & $1.66\pm0.04$ & $1.50$ & $1.63\pm0.03$ & $1.40$ \\
+Random forest, refit & $1.66\pm0.04$ & $1.51$ & $1.63\pm0.03$ & $1.40$ \\
+MLP, fine-tuned & $5.37\pm2.74$ & $5.30$ & $3.07\pm1.07$ & $2.77$ \\
+EWC, best $\lambda$ & $2.26\pm0.19$ & $0.02$ & $1.93\pm0.10$ & $0.08$ \\
+Replay, 10\,\% & $1.09\pm0.03$ & $0.59$ & $0.81\pm0.01$ & $0.32$ \\
+Independent MLPs & $0.58\pm0.02$ & $0.00$ & $0.44\pm0.03$ & $0.00$ \\
+NestAnt-CMS & $0.58\pm0.02$ & $0.00$ & $0.42\pm0.04$ & $0.00$ \\
+Progressive Nets & $0.39\pm0.02$ & $0.00$ & $0.34\pm0.02$ & $0.00$ \\
+\midrule
+XGBoost, pooled$^\ast$ & $0.30\pm0.01$ & -- & $0.29\pm0.02$ & -- \\
+MLP, pooled$^\ast$ & $0.41\pm0.03$ & -- & $0.44\pm0.05$ & -- \\
+Replicate limit$^\dagger$ & $0.27$ & -- & $0.26$ & -- \\
+\bottomrule
+\end{tabular}
